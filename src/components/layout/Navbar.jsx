@@ -1,69 +1,62 @@
-import { useState, useEffect } from 'react';
-import { GithubIcon, LinkedinIcon } from '@/components/ui/Icons';
-import { NAVBAR_STYLES } from '@/constants/theme';
-import { PORTFOLIO_STRUCTURE } from '@/data/portfolioData';
-import { getToken } from '@/utils/i18n';
+import React, { useState, useEffect } from 'react';
+import { getStoredLang, setStoredLang, getToken } from '@/utils/i18n';
 
-export default function Navbar({ lang, onToggleLang }) {
-  const [isScrolled, setIsScrolled] = useState(false);
+export default function Navbar() {
+  const [currentLang, setCurrentLang] = useState(getStoredLang());
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    const handleLangChange = () => {
+      setCurrentLang(getStoredLang());
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('languageChange', handleLangChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLangChange);
+    };
   }, []);
 
-  const personal = PORTFOLIO_STRUCTURE.personal;
-  const githubUrl = personal?.socials?.github || "https://github.com/tcshelo";
-  const linkedinUrl = personal?.socials?.linkedin || "https://www.linkedin.com/in/tcshelo/";
+  // Alterna o idioma e dispara o evento para atualizar a aplicação inteira
+  const handleToggleLang = () => {
+    const nextLang = currentLang === 'PT' ? 'EN' : 'PT';
+    setStoredLang(nextLang);
+    setCurrentLang(nextLang);
+  };
 
   return (
-    <nav className={isScrolled ? NAVBAR_STYLES.navScrolled : NAVBAR_STYLES.navDefault}>
-      <div className={NAVBAR_STYLES.container}>
+    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
         
-        {/* Logomarca */}
-        <a href="#" className={NAVBAR_STYLES.logoWrapper}>
-          <div className={NAVBAR_STYLES.logoBox}>
-            DS
-          </div>
-          <span className={NAVBAR_STYLES.logoText}>
-            Dev<span className={NAVBAR_STYLES.logoAccent}>.Portfolio</span>
-          </span>
+        {/* Logo / Nome */}
+        <a href="#" className="text-lg font-bold text-white tracking-wider">
+          HELOISA<span className="text-emerald-400">.DEV</span>
         </a>
 
-        {/* Links de navegação baseados em Tokens */}
-        <div className={NAVBAR_STYLES.linksWrapper}>
-          {PORTFOLIO_STRUCTURE.navLinks.map(({ href, token }) => (
-            <a key={href} href={href} className={NAVBAR_STYLES.linkItem}>
-              {getToken(token, lang)}
-            </a>
-          ))}
-        </div>
+        {/* Links de Navegação */}
+        <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+          <a href="#about" className="hover:text-emerald-400 transition-colors">{getToken(1000)}</a>
+          <a href="#skills" className="hover:text-emerald-400 transition-colors">{getToken(1001)}</a>
+          <a href="#projects" className="hover:text-emerald-400 transition-colors">{getToken(1002)}</a>
+          <a href="#contact" className="hover:text-emerald-400 transition-colors">{getToken(1003)}</a>
+        </nav>
 
-        {/* Ações (Redes sociais + Seletor de Idioma) */}
-        <div className="flex items-center gap-3">
-          <div className={NAVBAR_STYLES.socialsWrapper}>
-            <a href={githubUrl} target="_blank" rel="noopener noreferrer" className={NAVBAR_STYLES.socialIconBtn} aria-label="GitHub">
-              <GithubIcon className="w-4 h-4" />
-            </a>
-            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className={NAVBAR_STYLES.socialIconBtn} aria-label="LinkedIn">
-              <LinkedinIcon className="w-4 h-4" />
-            </a>
-          </div>
-
+        {/* Botão de Alternância de Idioma Dinâmico */}
+        <div className="flex items-center space-x-4">
           <button
-            onClick={onToggleLang}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs font-semibold text-white hover:bg-slate-700 transition-colors shadow-sm"
-            title="Mudar Idioma / Change Language"
+            onClick={handleToggleLang}
+            className="px-4 py-2 rounded-xl border border-slate-700 bg-slate-900/90 text-white font-semibold text-sm hover:border-emerald-500 hover:text-emerald-400 transition-all shadow-md flex items-center gap-1.5"
+            aria-label="Toggle language"
           >
-            {lang === 'PT' ? '🇺🇸 EN' : '🇧🇷 PT'}
+            {currentLang === 'PT' ? (
+              <span className="tracking-wide">
+                <span className="font-bold">BR</span> PT
+              </span>
+            ) : (
+              <span>EN</span>
+            )}
           </button>
         </div>
 
       </div>
-    </nav>
+    </header>
   );
 }

@@ -1,6 +1,9 @@
 import { Code2, Cpu, Terminal } from 'lucide-react';
+import { 
+  PDF_CONVERTER
+} from './projectList';
 
-// Estrutura fixa de dados vinculada aos tokens (Princípio da Responsabilidade Única)
+// Estrutura fixa de dados vinculada aos tokens
 export const PORTFOLIO_STRUCTURE = {
   personal: {
     name: "Heloisa",
@@ -74,26 +77,9 @@ export const PORTFOLIO_STRUCTURE = {
       href: "https://github.com/tcshelo",
       isExternal: true
     }
-  ],
-  projectsList: [
-    {
-      id: 'pdf-excel',
-      category: 'Automação',
-      categoryToken: 1045,
-      titleToken: 1050,
-      shortDescToken: 1051,
-      fullDescToken: 1052,
-      previewTitleToken: 1053,
-      previewSummaryToken: 1054,
-      tags: ['Streamlit', 'Python', 'Automação', 'Pandas'],
-      githubUrl: 'https://github.com/tcshelo/pdf-excel-converter',
-      featureTokens: [1055, 1056, 1057, 1058],
-      techStack: {
-        frontend: 'Streamlit Interface',
-        backend: 'Python Engine',
-        database: 'Processamento em Memória',
-        tools: 'Git, Pandas'
-      }
-    }
   ]
 };
+
+export const projectsList = [
+  PDF_CONVERTER
+];
